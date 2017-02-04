@@ -48,7 +48,12 @@ double TargetProcessor::calculateAzimuth(){ //unsure if this is working properly
 }
 
 double TargetProcessor::calculateAltitude(){ //same comment as calculateAzimuth(){
-    int cameraAngle = 0; //angle the camera is pointing up from the horizon; assumes camera is level
+    if(Tar){
+        int cameraAngle = 0;
+    }else{
+        int cameraAngle = 45;
+    }
+    //angle the camera is pointing up from the horizon
     double offset =  vertCenter - imageTarCenter.y;
     return (atan(offset/focalLength))*(180/M_PI) + cameraAngle; //in degrees
 }
