@@ -9,7 +9,7 @@
 
 void printUsage(std::string name)
 {
-    std::cerr << "Usage: " << name << " (-d <device_num> | -f <filename>) [--no-networking] [--headless] [--debug]" << std::endl;
+    std::cerr << "Usage: " << name << " (-d <boiler_device_num> -D <gear_device_num> | -f <filename>) [--no-networking] [--headless] [--debug]" << std::endl;
 }
 
 CmdLineInterface::CmdLineInterface(int argc, char *argv[])
@@ -23,7 +23,8 @@ CmdLineInterface::CmdLineInterface(int argc, char *argv[])
             {"headless", no_argument, &isHeadless, 1},
             {"no-networking", no_argument, &isNetworking, 0},
             {"debug", no_argument, &isDebug, 1},
-            {"device", required_argument, 0, 'd'},
+            {"gearDevice", required_argument, 0, 'd'},
+            {"boilerDevice", required_argument, 0, 'D'},
             {"file", required_argument, 0, 'f'},
             {0, 0, 0, 0}
         };
@@ -43,9 +44,18 @@ CmdLineInterface::CmdLineInterface(int argc, char *argv[])
                 printUsage(argv[0]);
                 exit(1);
             }
-            config.setDeviceID(boost::lexical_cast<int>(optarg));
-            config.setIsDevice(1);
+            config.setGearDeviceID(boost::lexical_cast<int>(optarg));
+            config.setIsGearDevice(1);
             break;
+        case 'D':
+                if(config.getIsFile())
+                {
+                    printUsage(argv[0]);
+                    exit(1);
+                }
+                config.setBoilerDeviceID(boost::lexical_cast<int>(optarg));
+                config.setIsBoilerDevice(1);
+                break;
         case 'f':
             if(config.getIsDevice())
             {
